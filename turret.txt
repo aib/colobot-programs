@@ -1,0 +1,56 @@
+extern void object::turret()
+{
+	float ACCURACY = 1.0;
+	
+	int TARGETS[6];
+	TARGETS[0] = AlienQueen;
+	TARGETS[1] = AlienEgg;
+	TARGETS[2] = AlienAnt;
+	TARGETS[3] = AlienSpider;
+	TARGETS[4] = AlienWasp;
+	TARGETS[5] = AlienWorm;
+	
+	while (true) {
+		object[] targets = radarall(TARGETS, 0, 360, 0, 40);
+		
+		for (int i=0; i<sizeof(targets); ++i) {
+			object target = targets[i];
+			
+			acquire(this, target);
+			float adist = acquire(this, target);
+			
+			if (adist < ACCURACY) {
+				fire(0.1);
+			}
+		}
+		wait(0.5);
+	}
+}
+
+float acquire(object self, object target)
+{
+	float TURRET_HEIGHT = 1.0;
+	point selfpos(self.position.x, self.position.y, self.position.z+TURRET_HEIGHT);
+	
+	float hdist = distance2d(target.position, selfpos);
+	float yaw = atan2(target.position.y - selfpos.y, target.position.x - selfpos.x);
+	float pitch = atan2(target.position.z - selfpos.z, hdist);
+	
+	float dy = angle_norm(yaw - self.orientation);
+	turn(dy);
+	float dp = angle_norm(pitch - self.pitch);
+	aim(dp);
+	
+	dy = angle_norm(yaw - self.orientation);
+	dp = abs(angle_norm(pitch - self.pitch));
+	if (dp <= 20) { dp = 0; } else { dp -= 20; }
+	
+	return sqrt(dy*dy + dp*dp);
+}
+
+float angle_norm(float ang)
+{
+	while (ang < -180) { ang += 360; }
+	while (ang >= 180) { ang -= 360; }
+	return ang;
+}
