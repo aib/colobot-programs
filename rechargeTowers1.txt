@@ -1,0 +1,24 @@
+extern void object::rechargeAllTowers()
+{
+	while (true) {
+		object[] towers = radarall(DefenseTower);
+		
+		for (int i = 0; i < sizeof(towers); ++i)
+		{
+			point towerPos = towers[i].position;
+			goto(towerPos);
+			goto(radar(PowerStation).position);
+			while (energyCell.energyLevel < 1) {
+				wait(0.5);
+			}
+			goto(towerPos);
+			grab(InFront);
+			drop(Behind);
+			grab(EnergyCell);
+			drop(InFront);
+			grab(Behind);
+			drop(EnergyCell);
+		}
+		
+	}
+}
