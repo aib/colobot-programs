@@ -1,0 +1,50 @@
+extern void object::rechargeAllTowers()
+{
+	float SELF_RECHARGE_LEVEL = 0.5;
+	
+	if (load == null) {
+		message("You must start this program holding a cell", DisplayError);
+		return;
+	}
+	
+	if (load.energyLevel < 1) {
+		recharge();
+	}
+	
+	while (true) {
+		object[] towers = radarall(DefenseTower);
+		
+		for (int i = 0; i < sizeof(towers); ++i)
+		{
+			object tower = towers[i];
+			goto(tower.position);
+			
+			if (tower.energyCell.energyLevel < 1) {
+				turn(+90);
+				drop(); //drop spare left
+				turn(-90);
+				message("Replacing tower cell, ignore next message", DisplayWarning);
+				grab(); //tower cell
+				turn(-90);
+				drop(); //drop tower cell right
+				turn(+180);
+				grab(); //spare left
+				turn(-90);
+				drop(); //tower
+				turn(-90);
+				grab(); //tower cell
+			}
+			
+			if (load.energyLevel < 1 or energyCell.energyLevel < SELF_RECHARGE_LEVEL) {
+				recharge();
+			}
+		}
+	}
+}
+
+void object::recharge() {
+	goto(radar(PowerStation).position);
+	while (energyCell.energyLevel < 1 or load.energyLevel < 1) {
+		wait(0.5);
+	}
+}
