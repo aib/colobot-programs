@@ -1,0 +1,28 @@
+extern void object::convertAllOre()
+{
+	object converter = radar(Converter);
+	
+	while (true) {
+		object tiOre = radar(TitaniumOre);
+		if (tiOre == null) { break; }
+		goto(tiOre.position);
+		grab();
+		goto(converter.position);
+		drop();
+		move(-2);
+		
+		if (energyCell.energyLevel < 0.5) {
+			goto(radar(PowerStation).position);
+			while (energyCell.energyLevel < 1) {
+				wait(1);
+			}
+			goto(converter.position);
+		} else {
+			wait(16);
+			move(+2);
+		}
+		grab();
+		goto(space(position, 4, 20, 2));
+		drop();
+	}
+}
