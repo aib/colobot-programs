@@ -1,0 +1,4 @@
+extern void object::goHome()
+{
+	goto(radar(SpaceShip).position);
+}

@@ -1,0 +1,6 @@
+extern void object::dropHome()
+{
+	object ss = radar(SpaceShip);
+	goto(space(ss.position));
+	drop();
+}

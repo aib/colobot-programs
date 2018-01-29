@@ -1,0 +1,8 @@
+extern void object::dropHomeAndReturn()
+{
+	point startPos = position;
+	goto(space(radar(SpaceShip).position, 1, 10, 1));
+	drop();
+	wait(5);
+	goto(startPos);
+}
